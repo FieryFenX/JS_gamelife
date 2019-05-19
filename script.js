@@ -53,6 +53,7 @@ function clearCells()
 
 function iteration()
 {
+  tick = 5;
   var field = document.getElementById('field').cloneNode(true);
   for (var i = 0; i < 10; i++)
     for (var j = 0; j < 10; j++)
@@ -77,9 +78,8 @@ function iteration()
 function time()
 {
   tick -= 0.100;
-  document.getElementById('timer').innerText = 'Timer: ' + tick.toFixed(3);
-  if (tick < 0.100)
-    tick = 5;
+  if (tick > 0)
+    document.getElementById('timer').innerText = 'Timer: ' + tick.toFixed(3);
 }
 
 function game()
@@ -88,8 +88,8 @@ function game()
   this.style.backgroundColor = 'blue';
   this.removeEventListener('click', game);
   this.addEventListener('click', pause);
+  timer = setInterval(time, 93.5);
   iter = setInterval(iteration, 5000);
-  timer = setInterval(time, 100);
 }
 
 function pause()
