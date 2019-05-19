@@ -1,0 +1,43 @@
+body
+{
+  width: 600px;
+  text-align: center;
+}
+
+header
+{
+  position: absolute;
+  left: 650px;
+  top: 250px;
+  font-size: 36pt;
+  font-family: monospace;
+}
+
+div
+{
+  display: inline-flex;
+  width: 50px;
+  height: 50px;
+  flex-direction: row;
+  flex-wrap: wrap;
+  background-color: white;
+  border: 3px solid purple;
+  margin-right: 4px;
+}
+
+button
+{
+  margin: 10px 7px 0 0;
+  height: 45px;
+  width: 290px;
+}
+
+#clear
+{
+  background-color: red;
+}
+
+#start
+{
+  background-color: green;
+}
