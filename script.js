@@ -1,22 +1,23 @@
-var tick = 5.000;
+const tick_length = 5.000;
+var tick;
 var iter;
 var timer;
 var kill;
-  
-function purpleDown()
+
+function rise()
 {
-  this.style.backgroundColor = '#603060';
+  this.className = "rising";
 }
 
-function purpleUp()
+function live()
 {
-  this.style.backgroundColor = 'purple';
+  this.className = "alive";
 }
 
 function desintegrate()
 {
   var cell = this;
-  kill = setTimeout(function(){cell.style.backgroundColor = 'white';}, 2000);
+  kill = setTimeout(function(){cell.className = 'dead';}, 400*tick_length);
 }
 
 function nogoback()
@@ -33,8 +34,9 @@ function createField()
     {
       var cell = document.createElement('div');
       cell.id = i.toString() + j.toString();
-      cell.addEventListener('mousedown', purpleDown);
-      cell.addEventListener('mouseup', purpleUp);
+      cell.className = "dead";
+      cell.addEventListener('mousedown', rise);
+      cell.addEventListener('mouseup', live);
       cell.addEventListener('mouseover', desintegrate);
       cell.addEventListener('mouseout', nogoback);
       field.appendChild(cell);
@@ -47,13 +49,13 @@ function clearCells()
   pause();
   var field = createField();
   document.body.replaceChild(field, document.getElementById('field'));
-  tick = 5;
+  tick = tick_length;
   document.getElementById('timer').innerText = 'Timer: ' + tick.toFixed(3);
 }
 
 function iteration()
 {
-  tick = 5;
+  tick = tick_length;
   var field = document.getElementById('field').cloneNode(true);
   for (var i = 0; i < 10; i++)
     for (var j = 0; j < 10; j++)
@@ -62,15 +64,15 @@ function iteration()
       for (var ii = i-1; ii <= i+1; ii++)
         for (var jj = j-1; jj <= j+1; jj++)
           if (ii != -1 && ii != 10 && jj != -1 && jj != 10 && (ii != i || jj != j))
-            if (document.getElementById(ii.toString() + jj.toString()).style.backgroundColor == 'purple')
+            if (document.getElementById(ii.toString() + jj.toString()).className == "alive")
               count++;
       var cell = field.children[i*10+j];
       cell.addEventListener('mouseover', desintegrate);
       cell.addEventListener('mouseout', nogoback);
       if (count == 3)
-        cell.style.backgroundColor = 'purple';
-      else if (cell.style.backgroundColor == 'purple' && count != 2)
-        cell.style.backgroundColor = 'white';
+        cell.className = "alive";
+      else if (cell.className == "alive" && count != 2)
+        cell.className = "dead";
     }
   document.body.replaceChild(field, document.getElementById('field'));
 }
@@ -84,12 +86,20 @@ function time()
 
 function game()
 {
+  for (var i = 0; i < 10; i++)
+    for (var j = 0; j < 10; j++)
+    {
+      var cell = document.getElementById(i.toString() + j.toString());
+      cell.removeEventListener('mousedown', rise);
+      cell.removeEventListener('mouseup', live);
+    }
+  tick = tick_length;
   this.innerText = "pause";
   this.style.backgroundColor = 'blue';
   this.removeEventListener('click', game);
   this.addEventListener('click', pause);
+  iter = setInterval(iteration, tick_length*1000);
   timer = setInterval(time, 93.5);
-  iter = setInterval(iteration, 5000);
 }
 
 function pause()
@@ -106,6 +116,7 @@ function pause()
 var field = createField();
 document.body.appendChild(field);
 
+document.getElementById('timer').innerText = "Timer: " + tick_length.toFixed(3);
 var clear = document.createElement('button');
 clear.id = clear.innerText = "clear";
 clear.addEventListener('click', clearCells);
