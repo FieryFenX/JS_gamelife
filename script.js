@@ -1,4 +1,4 @@
-const tick_length = 5.000;
+const tick_length = 1.000;
 var tick;
 var iter;
 var timer;
@@ -17,7 +17,7 @@ function live()
 function desintegrate()
 {
   var cell = this;
-  kill = setTimeout(function(){cell.className = 'dead';}, 400*tick_length);
+  kill = setTimeout(function(){cell.className = 'dead';}, 2000);
 }
 
 function nogoback()
@@ -44,6 +44,17 @@ function createField()
   return field;
 }
 
+function cellsNear(i,j)
+{
+  var count = 0;
+  for (var ii = i-1; ii <= i+1; ii++)
+    for (var jj = j-1; jj <= j+1; jj++)
+      if (ii != -1 && ii != 10 && jj != -1 && jj != 10 && (ii != i || jj != j))
+        if (document.getElementById(ii.toString() + jj.toString()).className == "alive")
+          count++;
+  return count;
+}
+
 function clearCells()
 {
   pause();
@@ -60,12 +71,7 @@ function iteration()
   for (var i = 0; i < 10; i++)
     for (var j = 0; j < 10; j++)
     {
-      var count = 0;
-      for (var ii = i-1; ii <= i+1; ii++)
-        for (var jj = j-1; jj <= j+1; jj++)
-          if (ii != -1 && ii != 10 && jj != -1 && jj != 10 && (ii != i || jj != j))
-            if (document.getElementById(ii.toString() + jj.toString()).className == "alive")
-              count++;
+      var count = cellsNear(i,j);
       var cell = field.children[i*10+j];
       cell.addEventListener('mouseover', desintegrate);
       cell.addEventListener('mouseout', nogoback);
